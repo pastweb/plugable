@@ -1,19 +1,19 @@
-# @pastweb/cli
+# @pastweb/plugable
 
-Library for plugin style CLI creation.
-Highly inspired to the vite plugin system.
+Library for plugin manager creation.
+Highly inspired to the [vite](https://github.com/vitejs/vite) plugin system.
 
 ## Installation
 
 ```sh
-$ npm i -S @pastweb/cli
+$ npm i -S @pastweb/plugable
 ```
 
 ## Usage
 ---
 ```js
 import { argv } from 'node:process'; // node or bun
-import { getCommandInput, defineHooks, loadPlugins, runCommand, runPluginsHooks } from '@pastweb/cli';
+import { getCommandInput, defineHooks, loadPlugins, runCommand, runPluginsHooks } from '@pastweb/plugable';
 
 (async () => {
   const commandInput = getCommandInput(argv.slice(2));
@@ -34,24 +34,24 @@ import { getCommandInput, defineHooks, loadPlugins, runCommand, runPluginsHooks 
 
 ## Summary
 ---
-- [overview](https://github.com/pastweb/cli.git#overview)
-- [hooks](https://github.com/pastweb/cli.git#hooks)
-- [plugins](https://github.com/pastweb/cli.git#plugins)
-- [commands](https://github.com/pastweb/cli.git#commands)
-- [functions](https://github.com/pastweb/cli.git#functions)
+- [overview](https://github.com/pastweb/plugable.git#overview)
+- [hooks](https://github.com/pastweb/plugable.git#hooks)
+- [plugins](https://github.com/pastweb/plugable.git#plugins)
+- [commands](https://github.com/pastweb/plugable.git#commands)
+- [functions](https://github.com/pastweb/plugable.git#functions)
 
 ### Overview
 ---
-The goal of the project is to give a tool mainly for cli definition, anyway there is no any dependecy to any specific platform, so the library could be used even just a plugin manager system, even in client side.
-The main functions are used to define your own `cli` as the above example.
+The goal of the project is to give a plugin manager system tool with no any dependecy to any specific platform, so the library could be used in client and server side.
+In the example ablve, `plugable` is used for a `cli` definition.
 All the base functionlities must be defined in an async function.
 In the example above is considerate the impementation in the index file or, anyway, in the main function program entry point.
-The `cli` support the commands definition via plugin, you can find more information in [commands](https://github.com/pastweb/cli.git#commands) and [plugin](https://github.com/pastweb/cli.git#plugins) section.
-After the [hooks](https://github.com/pastweb/cli.git#hooks) definition, the `loadPlugins` function normalize the [commands](https://github.com/pastweb/cli.git#commands) and the hooks defined in the plugins ready to run.
+`plugable` supports the commands definition via plugin, you can find more information in [commands](https://github.com/pastweb/plugable.git#commands) and [plugin](https://github.com/pastweb/plugable.git#plugins) section.
+After the [hooks](https://github.com/pastweb/plugable.git#hooks) definition, the `loadPlugins` function normalize the [commands](https://github.com/pastweb/plugable.git#commands) and the hooks defined in the plugins ready to run.
 The `runCommand` function returns a boolean from the command function execution as some command could not need to run any plugin hook called from the `runPluginHooks` function.
 If no any command definition want to be supported the just skip the `runCommand` function implementation as in the example below.
 ```js
-import { defineHooks, loadPlugins, runPluginsHooks } from '@pastweb/cli';
+import { defineHooks, loadPlugins, runPluginsHooks } from '@pastweb/plugable';
 
 (async () => {
   const hooks = defineHooks({
@@ -87,7 +87,7 @@ final | function | final callback function called after the hooks function call 
 example:
 
 ```js
-import { defineHooks } from '@pastweb/cli';
+import { defineHooks } from '@pastweb/plugable';
 import config, { normalizeConfig } from 'config'; // this is just as example
 
 let normalizedConfig = config;
@@ -111,11 +111,12 @@ const hooks = defineHooks({
 });
 ```
 ##### Hook function
-The hook functions are grouped from the `loadPlugins` function in 3 order groups `pre`, `default` and `post` before to be executed from the `runPluginHooks` function. You can find more information about how to enforce the plugin order in the [plugin](https://github.com/pastweb/cli.git#plugins) section.
+The hook functions are grouped from the `loadPlugins` function in 3 order groups `pre`, `default` and `post` before to be executed from the `runPluginHooks` function. You can find more information about how to enforce the plugin order in the [plugin](https://github.com/pastweb/plugable.git#plugins) section.
 ##### Hook name
-The hook name is an arbitrary name you can set in the hooks definition and it will be used later from the cli user in the `Plugin` definition. There are private names you cannot use as hook function name which are: `name`, `apply`, `enforce` and `commands`. You can find more info about these special names in the following [plugin](https://github.com/pastweb/cli.git#plugins) section.
+The hook name is an arbitrary name you can set in the hooks definition and it will be used later from the cli user in the `Plugin` definition. There are private names you cannot use as hook function name which are: `name`, `apply`, `enforce` and `commands`. You can find more info about these special names in the following [plugin](https://github.com/pastweb/plugable.git#plugins) section.
 You can use the `commands` name, into the hooks definition Object to pass arguments to che command function when the `loadPlugins` function is executed via the `args` property.
 If you mant to pass additional arguments just to a specific plugin commands function, you can define the additional args using the plugin name as `key` in the commands definition Object as in the example below.
+
 ```js
 const hooks = defineHooks({
     commands: {
@@ -126,6 +127,7 @@ const hooks = defineHooks({
     // other hooks definition
 });
 ```
+
 In the axample above all the plugins `commandsHook` function will receive `commands(commandInput, 'arg1')`,
 the `pligin1` `commands(commandInput, 'arg1', 'arg2', 'arg3')`,
 the `pligin2` `commands(commandInput, 'arg1', 'arg4', 'arg5')`,
@@ -178,7 +180,7 @@ const plugin = {
 
 ### Commands
 ---
-The commands are defined via the [command plugin hook](https://github.com/pastweb/cli.git#plugins), using a command definition Object with the following properties:
+The commands are defined via the [command plugin hook](https://github.com/pastweb/plugable.git#plugins), using a command definition Object with the following properties:
 |name|type|optional|
 |---|---|---|
 command | CommandFunction | no |
@@ -211,7 +213,7 @@ If the command is loaded via plugin and is already registered, the Cli will prin
 
 #### Command Function
 ---
-The `CommandFunction` is the function called to execure the command, reveice the `commandInput` Object as first argument, and any other `args` if defined in the `command hook` explained [below](https://github.com/pastweb/cli.git#hooks).
+The `CommandFunction` is the function called to execure the command, reveice the `commandInput` Object as first argument, and any other `args` if defined in the `command hook` explained [below](https://github.com/pastweb/plugable.git#hooks).
 As the CLI is extendable and it could load a command definition which don't needs, or don't want, runs the plugins hooks, is possible prevent this default behaviour just returning `false` from the `CommandFunction` execution.
 
 #### Help Object
@@ -234,13 +236,13 @@ For preventing the commands loading via plugin you must set the `preventCommands
 ### Functions
 ---
 ###### `getCommandInput(argv: string | string[] = []) => CommandsInput`
-Gets as single paramenter a string, or an array of strings representing the the user command input and returns an object as described in the [commands](https://github.com/pastweb/cli.git#commands) section.
+Gets as single paramenter a string, or an array of strings representing the the user command input and returns an object as described in the [commands](https://github.com/pastweb/plugable.git#commands) section.
 ###### `defineHooks(hooks: Hooks): Hooks`
 Check and normalize the hooks definition.
 ###### `loadPlugins<T extends Plugin = Plugin>(hooks: Hooks, plugins: T[], commandsInput: CommandsInput = {}, includePluginCommands: string | string[] = []): { commands: Commands; pluginsOrder: PluginsOrder; }`
 Loads the plugins grouping the hooks by `order` and the commands in a single Object.
 The `commands` arguments defined in the `commands` hook definition will be normalized when the loadPlugins function is called.
-Check the [hooks](https://github.com/pastweb/cli.git#hooks) section fore more info.
+Check the [hooks](https://github.com/pastweb/plugable.git#hooks) section fore more info.
 The commands in any Plugin will be included if the `includePluginCommand` ( `string` or `string[]` ) parameter is not provided, or just the commands defined in the plugin with the corrispondant name in the parameter.
 The `commandsInput` parameter is optional, just in case you want to use the library as pluginManager without any command option.
 ###### `runCommand(commands: Commands, commandsInput: CommandsInput): boolean | void`

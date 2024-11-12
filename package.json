@@ -1,7 +1,7 @@
 {
-  "name": "@pastweb/cli",
-  "version": "2.0.6",
-  "description": "utility library for cli and plugin manager creation",
+  "name": "@pastweb/pluganble",
+  "version": "2.0.7",
+  "description": "utility library for plugin manager creation",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/types/index.d.ts",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pastweb/cli.git"
+    "url": "git+https://github.com/pastweb/plugable.git"
   },
   "author": "Domenico Pasto",
   "license": "MIT",
