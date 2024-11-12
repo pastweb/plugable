@@ -1,6 +1,6 @@
 {
-  "name": "@pastweb/pluganble",
-  "version": "2.0.7",
+  "name": "@pastweb/plugable",
+  "version": "2.0.8",
   "description": "utility library for plugin manager creation",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
